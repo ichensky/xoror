@@ -1,3 +1,30 @@
+# Copyright (c) 2016-.. #John
+#
+# Author: #John <pocolab.com@gmail.com>
+# URL: http://www.pocolab.com
+# Version: 1.0.0
+
+# Commentary:
+
+# xoror - xor two binary files 
+
+# License:
+
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Emacs; see the file COPYING.  If not, write to the
+# Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+# Boston, MA 02110-1301, USA.
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -21,8 +48,8 @@ int main(int argc, char **argv){
 	FILE *f_smaller;
 	FILE *f_bigger;
 	open_files(argv[1],argv[2],
-		   &f_smaller,&f_bigger,
-		   &f_s_s,&f_b_s);
+			&f_smaller,&f_bigger,
+			&f_s_s,&f_b_s);
 
 	size_t fl=f_s_s<CHUNK;
 	size_t len=fl?f_s_s:CHUNK;
@@ -36,30 +63,33 @@ int main(int argc, char **argv){
 
 
 	FILE *f=fopen("x.zip","wb");
-	
+
+
+	// TODO: add flexible size of buffer, smaller file.
+
 	while(b_d<f_b_s){
-	  fseek(f_bigger, b_d, SEEK_SET); 
-	  fseek(f_smaller, b_d, SEEK_SET); 
-	  fread(b_s,sizeof(unsigned char),l_len,f_smaller);
-	  fread(b_b,sizeof(unsigned char),l_len,f_bigger);
+		fseek(f_bigger, b_d, SEEK_SET); 
+		fseek(f_smaller, b_d, SEEK_SET); 
+		fread(b_s,sizeof(unsigned char),l_len,f_smaller);
+		fread(b_b,sizeof(unsigned char),l_len,f_bigger);
 
-	  for(i=0;i<l_len;i++){
-	    s=b_s[i];
-	    b=b_b[i];
-	    r[i]=s^b;
-	  }
+		for(i=0;i<l_len;i++){
+			s=b_s[i];
+			b=b_b[i];
+			r[i]=s^b;
+		}
 
-	  //fseek(f_smaller, 0, SEEK_SET); 
+		//fseek(f_smaller, 0, SEEK_SET); 
 
-	  if(b_d+l_len>f_b_s){
-	    l_len=f_b_s-b_d;
-	  }
-	  fwrite(r,sizeof(char),l_len,f);	
+		if(b_d+l_len>f_b_s){
+			l_len=f_b_s-b_d;
+		}
+		fwrite(r,sizeof(char),l_len,f);	
 
-	  b_d+=len;
-	  s_d+=len;
+		b_d+=len;
+		s_d+=len;
 	}
-  
+
 	return(0);
 }
 void print_help(){
@@ -75,7 +105,7 @@ size_t file_size(FILE *f){
 void open_files(const char *filename1, const char *filename2,
 		FILE **f_smaller, FILE **f_bigger,
 		size_t *f_s_s, size_t *f_b_s
-		){
+	       ){
 	*f_smaller=fopen(filename1,"rb");
 	*f_bigger=fopen(filename2,"rb");
 	if(!*f_smaller){
@@ -99,7 +129,7 @@ void open_files(const char *filename1, const char *filename2,
 		exit(EXIT_FAILURE);
 	}
 
-	
+
 	if (*f_s_s>*f_b_s) {
 		FILE *f; 
 		size_t n;
